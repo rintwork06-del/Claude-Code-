@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ストップウォッチ</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #1a1a2e;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    .time {
+      font-size: 80px;
+      color: #ffffff;
+      letter-spacing: 4px;
+      margin-bottom: 40px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    button {
+      padding: 16px 36px;
+      font-size: 20px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.8;
+    }
+
+    #startStop {
+      background-color: #4ecca3;
+      color: #1a1a2e;
+    }
+
+    #reset {
+      background-color: #e94560;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="time" id="display">00:00:00</div>
+    <div class="buttons">
+      <button id="startStop">スタート</button>
+      <button id="reset">リセット</button>
+    </div>
+  </div>
+
+  <script>
+    let timer = null;
+    let milliseconds = 0;
+    let running = false;
+
+    function updateDisplay() {
+      const mins = Math.floor(milliseconds / 60000);
+      const secs = Math.floor((milliseconds % 60000) / 1000);
+      const ms   = Math.floor((milliseconds % 1000) / 10);
+
+      const mm = String(mins).padStart(2, '0');
+      const ss = String(secs).padStart(2, '0');
+      const cs = String(ms).padStart(2, '0');
+
+      document.getElementById('display').textContent = `${mm}:${ss}:${cs}`;
+    }
+
+    document.getElementById('startStop').addEventListener('click', function () {
+      if (!running) {
+        timer = setInterval(function () {
+          milliseconds += 10;
+          updateDisplay();
+        }, 10);
+        this.textContent = 'ストップ';
+        running = true;
+      } else {
+        clearInterval(timer);
+        this.textContent = 'スタート';
+        running = false;
+      }
+    });
+
+    document.getElementById('reset').addEventListener('click', function () {
+      clearInterval(timer);
+      milliseconds = 0;
+      running = false;
+      document.getElementById('startStop').textContent = 'スタート';
+      updateDisplay();
+    });
+  </script>
+</body>
+</html>
